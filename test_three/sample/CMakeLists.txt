@@ -9,4 +9,5 @@ link_directories(${CMAKE_SOURCE_DIR}/../install/lib)
 
 add_executable(sample ${SOURCE_SRC})
 #链接
-target_link_libraries(sample libhello_static.a)
+# target_link_libraries(sample libhello_static.a)
+target_link_libraries(sample hello)
