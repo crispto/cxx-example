@@ -1,5 +1,14 @@
 {
   "files.associations": {
-    "__config": "cpp"
+    "__config": "cpp",
+    "string": "cpp",
+    "iosfwd": "cpp",
+    "memory": "cpp",
+    "algorithm": "cpp",
+    "deque": "cpp",
+    "locale": "cpp",
+    "type_traits": "cpp",
+    "vector": "cpp",
+    "ostream": "cpp"
   }
 }
