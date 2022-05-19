@@ -2,7 +2,7 @@ set(PROJECT_NAME labor)
 PROJECT (${PROJECT_NAME})
 include_directories(include)
 
-set(CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 file(GLOB SRC *.cpp)
 message("src is " ${SRC})
