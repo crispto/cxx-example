@@ -22,7 +22,7 @@ void display_map(map<int, int> &m) {
         if (ind != m.size()) {
             cout << ", ";
         } else {
-            cout << "   }" << endl;
+            cout << " }" << endl;
         }
     }
 }
