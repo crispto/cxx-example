@@ -1,6 +1,6 @@
 set(PROJECT_NAME labor)
 PROJECT (${PROJECT_NAME})
-include_directories(include)
+include_directories(./include)
 
 set(CMAKE_CXX_STANDARD 11)
 

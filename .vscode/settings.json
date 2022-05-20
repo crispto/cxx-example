@@ -1,15 +1,80 @@
 {
+  //global settting
+  "workbench.colorTheme": "Monokai",
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  //
+  // go setting
+  "go.testFlags": [
+    "-v"
+  ],
+  "go.delveConfig": {
+    "debugAdapter": "legacy",
+  },
+  "go.useLanguageServer": true,
+  //
+  // vue setting
+  "vetur.format.defaultFormatter.html": "js-beautify-html",
+  // "[html]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  // "[vue]": {
+  //   "editor.defaultFormatter": "octref.vetur"
+  // },
+  // "editor.fontSize": 13,
+  // "[javascript]": {
+  //   "editor.defaultFormatter": "vscode.typescript-language-features"
+  // },
+  // "[jsonc]": {
+  //   "editor.defaultFormatter": "vscode.json-language-features"
+  // },
+  // "[json]": {
+  //   "editor.defaultFormatter": "vscode.json-language-features"
+  // },
+  // "workbench.editorAssociations": {
+  //   "*.ipynb": "jupyter.notebook.ipynb"
+  // },
+  // "workbench.startupEditor": "newUntitledFile",
+  // "gulp.autoDetect": "on",
+  // "grunt.autoDetect": "on",
+  // "jake.autoDetect": "on",
+  "explorer.confirmDelete": true,
+  "C_Cpp.errorSquiggles": "Enabled",
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "C_Cpp.loggingLevel": "Debug",
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python",
+  },
+  "python.defaultInterpreterPath": "/usr/local/bin/python",
+  "python.formatting.provider": "autopep8",
   "files.associations": {
-    "__config": "cpp",
-    "string": "cpp",
-    "iosfwd": "cpp",
-    "memory": "cpp",
-    "algorithm": "cpp",
-    "deque": "cpp",
-    "locale": "cpp",
-    "type_traits": "cpp",
-    "vector": "cpp",
-    "ostream": "cpp",
-    "iostream": "cpp"
+    "random": "cpp"
+  },
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.languageServer": "Pylance"
+
 }
-}
+// {
+//   "files.associations": {
+//     "__config": "cpp",
+//     "string": "cpp",
+//     "iosfwd": "cpp",
+//     "memory": "cpp",
+//     "algorithm": "cpp",
+//     "deque": "cpp",
+//     "locale": "cpp",
+//     "type_traits": "cpp",
+//     "vector": "cpp",
+//     "ostream": "cpp",
+//     "iostream": "cpp",
+//     "random": "cpp"
+//   }
+// }
