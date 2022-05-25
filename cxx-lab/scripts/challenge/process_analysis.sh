@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/local/bin/bash
 declare -A tty_map
 tty_map=()
 process(){

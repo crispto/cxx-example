@@ -40,7 +40,7 @@
   // "gulp.autoDetect": "on",
   // "grunt.autoDetect": "on",
   // "jake.autoDetect": "on",
-  "explorer.confirmDelete": true,
+  "explorer.confirmDelete": false,
   "C_Cpp.errorSquiggles": "Disabled",
   "[c]": {
     "editor.defaultFormatter": "xaver.clang-format"
