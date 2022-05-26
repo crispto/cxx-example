@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Bash-Debug (simplest configuration)",
       "program": "${file}",
-      "args": ["/usr/local/bin"]
+      "args": ["~/Desktop"]
     }
   ]
 }
