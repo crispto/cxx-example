@@ -1,3 +1,4 @@
+#! /usr/local/bin/bash
 declare -A dic
 dic=()
 process(){
