@@ -1,5 +1,4 @@
-#! /usr/local/bin/bash
-declare -A dic
+#! /usr/local/bin/bash -xv
 dic=()
 process(){
   echo $1;

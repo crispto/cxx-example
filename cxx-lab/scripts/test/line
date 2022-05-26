@@ -1,0 +1,5 @@
+     1	check_file_exit.sh
+     2	line
+     3	start_bug.sh
+     4	while_read_file.sh
+     5	word_count_dict.sh
