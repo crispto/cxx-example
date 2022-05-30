@@ -6,7 +6,7 @@
   "editor.insertSpaces": true,
   "editor.formatOnSave": true,
   "explorer.confirmDelete": false,
-  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.defaultProfile.linux": "zsh",
   //
   // go setting
   "go.testFlags": [
@@ -55,9 +55,10 @@
   },
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "python.formatting.provider": "autopep8",
-  
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
-  "python.languageServer": "Pylance"
-
+  "python.languageServer": "Pylance",
+  "files.associations": {
+    "iomanip": "cpp"
+  }
 }
