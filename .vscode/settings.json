@@ -60,6 +60,10 @@
   "python.linting.enabled": true,
   "python.languageServer": "Pylance",
   "files.associations": {
-    "iomanip": "cpp"
+    "iomanip": "cpp",
+    "iostream": "cpp",
+    "cholesky": "cpp",
+    "dense": "cpp",
+    "ostream": "cpp"
   }
 }
