@@ -57,7 +57,7 @@
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "python.formatting.provider": "autopep8",
   "python.linting.pylintEnabled": true,
-  "python.linting.enabled": true,
+  "python.linting.enabled": false,
   "python.languageServer": "Pylance",
   "files.associations": {
     "iomanip": "cpp",
