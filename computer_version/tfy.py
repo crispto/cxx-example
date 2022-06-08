@@ -12,9 +12,16 @@ def enter_to_enter():
     a = 1/0
 
 
-if __name__ == "__main__":
-    start()
-
 """
 python 的 traceback 是从上到下的调用栈，因此看最底部就是触发错误的地方
 """
+
+
+class Callable:
+    def __call__(self, name, parm):
+        print("name: {}, param: {}".format(name, parm))
+
+
+a = Callable()
+
+a("yang", "good")
