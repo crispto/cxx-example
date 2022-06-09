@@ -1,25 +1,27 @@
-import tensorflow as tf
-
-mnist = tf.keras.datasets.mnist
-print(type(mnist))
-print(type(3.00))
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-x_train, x_test = x_train / 255.0, x_test / 255.0
+def start():
+    enter()
 
 
-model = tf.keras.models.Sequential([
-    tf.keras.layers.Flatten(input_shape=(28, 28)),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.Dense(10, activation='softmax')
-])
-
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
+def enter():
+    print("enter exe...")
+    enter_to_enter()
 
 
-model.fit(x_train, y_train, epochs=5)
+def enter_to_enter():
+    print("enter to enter exe...")
+    a = 1/0
 
-model.evaluate(x_test,  y_test, verbose=2)
+
+"""
+python 的 traceback 是从上到下的调用栈，因此看最底部就是触发错误的地方
+"""
+
+
+class Callable:
+    def __call__(self, name, parm):
+        print("name: {}, param: {}".format(name, parm))
+
+
+a = Callable()
+
+a("yang", "good")
