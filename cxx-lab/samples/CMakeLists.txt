@@ -3,8 +3,8 @@ set(PROJECT_NAME sample)
 project(${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 11)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-include_directories(../install/include)
-link_directories(../install/lib)
+include_directories(${CMAKE_SOURCE_DIR}/../install/include)
+link_directories(${CMAKE_SOURCE_DIR}/../install/lib)
 
 file(GLOB SRCS *.cpp)
 

@@ -10,5 +10,5 @@ using namespace std;
 void display_vec(vector<int> &a);
 void display_map(map<int, int> &a);
 void display_deque(std::deque<int> &input);
-
+int sum_of_max_n(std::vector<int> &input, int num);
 #endif

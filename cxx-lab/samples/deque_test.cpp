@@ -1,6 +1,7 @@
 #include <common.hpp>
-
-int test1() {
+#include <cstring>
+int test1()
+{
     std::deque<int> que(3, 1);
     display_deque(que);
     for (int i = 0; i < 10; i++) {
@@ -8,33 +9,45 @@ int test1() {
         display_deque(que);
     }
 }
-class Nexus {
-  public:
-    static int get_next() { return next_trackid++; }
+class Nexus
+{
+    public:
+    static int get_next()
+    {
+        return next_trackid++;
+    }
     static int next_trackid;
 };
 
 int Nexus::next_trackid = 0;
 
-class Tracker {
-  public:
-    Tracker();
+class Tracker
+{
+    public:
+    Tracker() = default;
+    Tracker(float _alpha, std::string v);
     void show();
-    int get_next() { return Nexus::get_next(); }
+    int get_next()
+    {
+        return Nexus::get_next();
+    }
 
-  private:
+    private:
     float alpha = 0.5;
     char msg[20];
 };
 
-Tracker::Tracker(float _alpha, std::string v) : alpha(_alpha) {
+Tracker::Tracker(float _alpha, std::string v) : alpha(_alpha)
+{
     memcpy(msg, v.c_str(), v.size());
 }
-Tracker::show() {
+void Tracker::show()
+{
     std::cout << "alpha: " << alpha << " msg " << msg << std::endl;
 }
 
-int uuid() {
+int uuid()
+{
     Tracker a;
     Tracker b;
 
@@ -44,8 +57,20 @@ int uuid() {
     }
 }
 
-int init_order() {
+int init_order()
+{
     Tracker v(12.5, "hello");
     v.show();
 }
-int main() { init_order(); }
+
+void test_max()
+{
+    std::vector<int> x = { 1, 2, 3, 4, 5, 7, 3, 31 };
+    int ret = sum_of_max_n(x, 3);
+    std::cout << "ret is " << ret << std::endl;
+}
+
+int main()
+{
+    test_max();
+}
