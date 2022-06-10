@@ -5,11 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "bashdb",
+      "name": "Python: Current File",
+      "type": "python",
       "request": "launch",
-      "name": "Bash-Debug (simplest configuration)",
       "program": "${file}",
-      "args": ["~/Desktop"]
-    }
+      "cwd": "${fileDirname}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
   ]
 }

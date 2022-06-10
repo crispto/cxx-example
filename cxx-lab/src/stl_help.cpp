@@ -26,3 +26,12 @@ void display_map(map<int, int> &m) {
         }
     }
 }
+
+void display_deque(std::deque<int> &input) {
+    if (input.size() == 0) {
+        std::cout << "empty deque" << std::endl;
+    } else {
+        std::vector<int> a(input.begin(), input.end());
+        display_vec(a);
+    }
+}
