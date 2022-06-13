@@ -8,9 +8,11 @@ link_directories(${CMAKE_SOURCE_DIR}/../install/lib)
 
 file(GLOB SRCS *.cpp)
 
+find_package(OpenCV 4 REQUIRED)
+INCLUDE_DIRECTORIES(${OPENCV_INCLUDE_DIRS})
 
 foreach(SRC ${SRCS})
   get_filename_component(FNAME ${SRC} NAME_WE)
   add_executable(${FNAME} ${SRC})
-  target_link_libraries(${FNAME} labor_static)
+  target_link_libraries(${FNAME} labor)
 endforeach()

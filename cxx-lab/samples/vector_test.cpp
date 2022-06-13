@@ -16,7 +16,7 @@ void test_call()
 {
     for (int i = 0; i < 10; i++) {
         cam_param_t v = call_counter();
-        std::cout << "x " : v.x << " y: " << v.y << "yaw: " << v.yaw << std::endl;
+        std::cout << "x " << v.x << " y: " << v.y << "yaw: " << v.yaw << std::endl;
     }
 }
 int main()

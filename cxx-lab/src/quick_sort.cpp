@@ -1,8 +1,5 @@
 #include "common.hpp"
 #include <fstream>
-#include <json/value.h>
-#include <json/json.h>
-
 int sum_of_max_n(std::vector<int> &input, int num)
 {
     for (int i = 0; i < input.size(); i++) {
@@ -26,16 +23,14 @@ cam_param_t call_counter()
     static int inited = 0;
     static cam_param_t param;
     if (!inited) {
-        Json::Reader reader;
-        Json::Value content;
-        std::ifstream f("param.json", std::ifstream::binary);
-        std::stringstream sts;
-        sts << f.rdbuf();
-        reader.parse(sts.str(), content);
-        std::cout << "content is " << content.asString() << std::endl;
-        param.x = content["x"].asInt();
-        param.y = content["y"].asInt();
-        param.yaw = content["yaw"].asInt();
+        std::ifstream i("param.json");
+        nlohmann::json content;
+        i >> content;
+        std::cout << "content is " << content << std::endl;
+        param.x = content["x"];
+        param.y = content["y"];
+        param.yaw = content["yaw"];
+        inited = 1;
     }
     param.yaw += 1;
     return param;

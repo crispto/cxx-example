@@ -1,3 +1,4 @@
-#include <highgui.h>
 
-int main() {}
+int main()
+{
+}
