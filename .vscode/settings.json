@@ -68,7 +68,10 @@
     "ostream": "cpp",
     "deque": "cpp",
     "__locale": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "fstream": "cpp",
+    "type_traits": "cpp",
+    "*.ipp": "cpp"
   },
   "cmake.configureOnOpen": false
 }
