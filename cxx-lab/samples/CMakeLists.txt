@@ -7,8 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR}/../install/include)
 link_directories(${CMAKE_SOURCE_DIR}/../install/lib)
 
 file(GLOB SRCS *.cpp)
-
-find_package(OpenCV 4 REQUIRED)
+find_package(OpenCV 4)
 INCLUDE_DIRECTORIES(${OPENCV_INCLUDE_DIRS})
 
 foreach(SRC ${SRCS})
