@@ -19,7 +19,18 @@ void test_call()
         std::cout << "x " << v.x << " y: " << v.y << "yaw: " << v.yaw << std::endl;
     }
 }
+
+
+void accept_string(const std::string & input){
+  std:cout << "input is " << input << std::endl;
+}
+
+void accept_char(const char* input){
+  accept_string(std::string(input));
+}
+
 int main()
 {
-    test_call();
+  const char * v = "yangcheng";
+  accept_char(v);
 }
