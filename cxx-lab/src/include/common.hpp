@@ -21,4 +21,7 @@ typedef struct cam_param_t {
 } cam_param_t;
 
 cam_param_t call_counter();
+// 获取一个 upper case 的char数组
+char *get_char_array(const std::string &init_str); // 需要调用者手动释放
+int get_char_array2(const std::string &init_str, char out[1024]); // 简单的实现
 #endif
