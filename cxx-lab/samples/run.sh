@@ -12,7 +12,7 @@ case $cmd in
     ;;
     creb|crebuild)
     rm -rf ./build && mkdir build
-    cd build && cmake .. && make -j 4
+    cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 4
     ;;
 
 
