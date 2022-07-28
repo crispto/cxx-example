@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.1.0)
+set(PROJECT_NAME sample)
+project(${PROJECT_NAME})
+set(CMAKE_CXX_STANDARD 11)
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+file(GLOB SRCS src/*.cpp)
+find_package(OpenCV 4)
+INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+message(NOTICE ${OpenCV_INCLUDE_DIRS})
+link_directories(${OpenCV_INSTALL_PATH}/lib)
+message(NOTICE "target link path" ${OpenCV_INSTALL_PATH}/lib)
+message(NOTICE "libs" ${OpenCV_LIBS})
+
+foreach(SRC ${SRCS})
+  get_filename_component(FNAME ${SRC} NAME_WE)
+  add_executable(${FNAME} ${SRC})
+  target_link_libraries(${FNAME} ${OpenCV_LIBS})
+endforeach()
