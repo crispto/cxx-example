@@ -1,4 +1,5 @@
 #include <string>
+#include "common.hpp"
 char *get_char_array(const std::string &init_str)
 {
     char *ch = new char[init_str.size() + 1];
