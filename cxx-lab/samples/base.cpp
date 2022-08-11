@@ -1,189 +1,66 @@
 #include <iostream>
 #include <assert.h>
+#include <string.h>
+#include <ctime>
+#include <chrono>
 // 探究vitural and pure virtual
-class BaseDoc
+
+class test
 {
+    friend test foo(double);
+    // friend operator=(test& this, test& other);
+
     public:
-    virtual void serial() = 0;
-    virtual void prompt()
+    test()
     {
-        std::cout << "BaseDoc::prompt" << std::endl;
+        std::cout << "test default constructor called " << std::endl;
+        memset(array, 0, 100 * sizeof(double));
     };
-    void on_open()
+    test(const test &x)
     {
-        std::cout << "BaseDoc::on_open" << std::endl;
-        prompt();
-        serial();
+        std::cout << "copy construct is called" << std::endl;
+        memcpy(this, &x, sizeof(test));
     }
-};
-
-class WordDoc : public BaseDoc
-{
-    public:
-    virtual void prompt() override
+    test &operator=(const test &src)
     {
-        std::cout << "WordDoc::prompt" << std::endl;
+        std::cout << "assign construct is called" << std::endl;
+
+        memcpy(this, &src, sizeof(test));
     };
-    void serial() final
+    void show()
     {
-        std::cout << "WordDoc::serial" << std::endl;
-    };
-};
-
-int testInherit()
-{
-    WordDoc doc;
-    doc.on_open();
-
-    // 如果是一個非純虛函数呢
-    // 继承类中的virtual 代表它可以被选择性 override
-}
-
-// 一个多维向量类
-template <typename T> class Point
-{
-    public:
-    Point(T v = 0.0) : _v(v){};
-    T v()
-    {
-        return _v;
-    };
-
-    private:
-    T _v;
-};
-
-template <typename T> inline std::ostream &operator<<(std::ostream &out, Point<T> &p)
-{
-    out << "( " << p.v() << " )";
-    return out;
-};
-
-template <typename T, int dim> class Tensor
-{
-    public:
-    Tensor(T _values[dim])
-    {
-        for (int i = 0; i < dim; i++) {
-            values[i] = _values[i];
-        }
-    };
-    T operator[](uint i)
-    {
-        assert(i < dim && 0 <= i);
-        return values[i];
+        std::cout << "local: " << array[0] << ", " << array[1] << ", "
+                  << "...." << array[99] << std::endl;
     }
 
     private:
-    T values[dim];
+    double array[100];
 };
 
-template <typename T, int dim>
-inline std::ostream &operator<<(std::ostream &out, Tensor<T, dim> &t)
+test foo(double val)
 {
-    out << "( ";
-    for (uint i = 0; i < dim; i++) {
-        out << t[i];
-        if (i != dim - 1)
-            out << ", ";
-    }
-    out << " )";
-    return out;
-}
-
-int testPoint()
-{
-    Point<int> a(10.0);
-    std::cout << "point: " << a << std::endl;
-
-    float raw[3] = { 3.0, 4.12, 5.68 };
-    Tensor<float, 3> t(raw);
-    std::cout << "tensor: " << t << std::endl;
-    return 0;
-}
-
-class Material
-{
-    public:
-    virtual void check_in()
-    {
-        std::cout << "Material::check_in " << std::endl;
-    };
-    virtual void close_conn()
-    {
-        std::cout << "Material::close_conn" << std::endl;
-    }
-    virtual void only_base_has()
-    {
-        std::cout << "Material::only_base_has" << std::endl;
-    }
-    virtual ~Material()
-    {
-        std::cout << "~Material()" << std::endl;
-        close_conn();
-    }
+    test local;
+    local.array[0] = val;
+    local.array[99] = val;
+    return local;
 };
 
-class Book : public Material
+int64_t timecut()
 {
-    public:
-    void check_in() override
-    {
-        std::cout << "Book::check_In" << std::endl;
-    };
-    void close_conn()
-    {
-        std::cout << "Book::close_conn" << std::endl;
-    };
-    ~Book()
-    {
-        std::cout << "~Book" << std::endl;
-    }
-};
-
-int test_dynamic_binding(Material &m)
-{
-    m.check_in();
-    m.only_base_has();
-    return 0;
+    using namespace std::chrono;
+    milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+    return ms.count();
 }
 
-int testBook()
-{
-    Book b1;
-    test_dynamic_binding(b1);
-    std::cout << "here b1 and base class will deconstruct" << std::endl;
-    return 0;
-}
-
-
-int testVirtualFunction()
-{
-    testBook();
-    return 0;
-}
-
-class Foo{
-    public:
-    Foo(){
-        std::cout <<"Foo::Foo" <<std::endl;
-    }
-};
-
-class Bar{
-    public:
-    Bar(){
-        str = "hello world";
-    };
-    void show(){
-        std::cout << "bar content: " <<str <<std::endl;
-    };
-    private:
-    Foo fo;
-    char *str;
-};
 int main()
 {
- testVirtualFunction();
-
+    int64_t start = timecut();
+    for (int i = 0; i < 10000; i++) {
+        // std::cout <<"i ... " <<i <<std::endl; 
+        test k;
+        k= foo(float(i));
+        k.show();
+    }
+    int64_t end = timecut();
+    std::cout << "time escap: " << end - start << std::endl;
 }
