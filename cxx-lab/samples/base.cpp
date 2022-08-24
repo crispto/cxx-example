@@ -57,8 +57,7 @@ int main()
     int64_t start = timecut();
     for (int i = 0; i < 10000; i++) {
         // std::cout <<"i ... " <<i <<std::endl; 
-        test k;
-        k= foo(float(i));
+        test k = foo(float(i));
         k.show();
     }
     int64_t end = timecut();
