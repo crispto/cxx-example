@@ -12,3 +12,4 @@ b = np.array([2,3,4])
 print("a * b is ", a*b)
 print("a^2 is ", a ** 2)
 print("a^3 is ", a ** 3)
+\

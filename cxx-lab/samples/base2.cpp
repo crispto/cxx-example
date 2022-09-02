@@ -120,7 +120,7 @@ class Material
     {
         std::cout << "Material::only_base_has" << std::endl;
     }
-    virtual ~Material()
+    ~Material()
     {
         std::cout << "~Material()" << std::endl;
         close_conn();
@@ -144,27 +144,24 @@ class Book : public Material
     }
 };
 
-int test_dynamic_binding(Material &m)
+int test_dynamic_binding(Material *m)
 {
-    m.check_in();
-    m.only_base_has();
+    m->check_in();
+    m->only_base_has();
     return 0;
 }
 
-int testBook()
+int main()
 {
-    Book b1;
+    Material * b1 = new Book();
     test_dynamic_binding(b1);
     std::cout << "here b1 and base class will deconstruct" << std::endl;
+    delete b1;
     return 0;
 }
 
 
-int testVirtualFunction()
-{
-    testBook();
-    return 0;
-}
+
 
 class Foo{
     public:

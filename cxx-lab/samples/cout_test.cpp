@@ -1,7 +1,9 @@
 #include <iostream>
-#include <iomanip>
+#include <map>
+
 int main(){
-  std::cout <<"line one: ";
-  std::cout << std::setprecision(17);
-  std::cout << 12.9901 << std::endl;
+  std::map<std::string, int> a;
+  int j = a["yang"];
+  std::cout << "j is " << j << std::endl;
+  return 0;
 }
