@@ -16,8 +16,9 @@ foreach(SRC ${SRCS})
   get_filename_component(FNAME ${SRC} NAME_WE)
   
   add_executable(${FNAME} ${SRC})
-  target_link_libraries(${FNAME} labor)
   if ( FNAME MATCHES "opencv.*")
     target_link_libraries(${FNAME} labor ${OPENCV_LIBS})
+  else()
+    target_link_libraries(${FNAME} labor) # else
   endif()
 endforeach()
