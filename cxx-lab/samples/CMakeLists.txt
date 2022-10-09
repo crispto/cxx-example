@@ -19,6 +19,6 @@ foreach(SRC ${SRCS})
   if ( FNAME MATCHES "opencv.*")
     target_link_libraries(${FNAME} labor ${OPENCV_LIBS})
   else()
-    target_link_libraries(${FNAME} labor) # else
+    target_link_libraries(${FNAME} labor pthread) # else
   endif()
 endforeach()

@@ -17,6 +17,7 @@ template <typename T> class Channel
     ~Channel();
     size_t size();
     size_t cap();
+    int close();
 
     friend bool operator>> <T> (Channel<T> &self, T &it); // sync output
     friend Channel<T>& operator<< <T>(Channel<T> &self, T &it); // sync input
@@ -28,6 +29,8 @@ template <typename T> class Channel
     T *end_iter;
     size_t cap_;
     bool close_;
+    bool full_; // full of data
+
 
     private:
     int realloc();
