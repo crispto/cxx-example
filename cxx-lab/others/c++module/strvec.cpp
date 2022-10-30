@@ -1,4 +1,5 @@
 #include <iostream>
+#include <initializer_list>
 using namespace std;
 class Strvec
 {
@@ -24,6 +25,16 @@ private:
 
 public:
         Strvec() : data(nullptr), finish(nullptr), end(nullptr){};
+        Strvec(initializer_list<string> li)
+        {
+                data = alloc.allocate(li.size());
+                string *pos = data;
+                for (auto k : li) {
+                        alloc.construct(pos++, k);
+                }
+                end = pos;
+                finish = pos;
+        };
         Strvec(size_t n, const string &s = string())
         {
                 data = alloc.allocate(n);
@@ -118,31 +129,67 @@ public:
         {
                 return end - data;
         };
+        Strvec get_val()
+        {
+                return *this;
+        };
+        Strvec &get_ref()
+        {
+                return *this;
+        };
+        Strvec sorted() &
+        {
+                cout << "lref only sorted" << endl;
+                std::sort(data, finish);
+                return *this;
+        };
+        Strvec sorted() const &&
+        {
+                cout << "rref only sorted" << endl;
+                Strvec foo(*this);
+                std::sort(foo.data, foo.finish);
+                return foo;
+        };
+        void show()
+        {
+                for (size_t i = 0; i < size(); i++) {
+                        cout << data[i] << " ";
+                }
+                cout << endl;
+        }
 };
 allocator<string> Strvec::alloc;
 
 int main()
 {
-        Strvec v;
-        for (size_t i = 0; i < 5; i++) {
-                v.push("hello");
-        }
+        // Strvec v;
+        // for (size_t i = 0; i < 5; i++) {
+        //         v.push("hello");
+        // }
 
-        for (size_t i = 0; i < v.size(); i++) {
-                cout << v[i] << endl;
-        }
+        // for (size_t i = 0; i < v.size(); i++) {
+        //         cout << v[i] << endl;
+        // }
 
-        Strvec v2(std::move(v));
-        for (size_t i = 0; i < v2.size(); i++) {
-                cout << v2[i] << endl;
-        }
+        // Strvec v2(std::move(v));
+        // for (size_t i = 0; i < v2.size(); i++) {
+        //         cout << v2[i] << endl;
+        // }
 
-        for (size_t i = 0; i < v.size(); i++) {
-                cout << v[i] << endl;
-        }
-        std::cout << "v is empty? " << v.empty() << endl;
-        for (size_t i = 0; i < v.size(); i++) {
-                cout << v[i] << endl;
-        }
+        // for (size_t i = 0; i < v.size(); i++) {
+        //         cout << v[i] << endl;
+        // }
+        // std::cout << "v is empty? " << v.empty() << endl;
+        // for (size_t i = 0; i < v.size(); i++) {
+        //         cout << v[i] << endl;
+        // }
+        Strvec v{ "f", "c", "b", "e" };
+        Strvec v2 = v.get_val().sorted();
+        v.show();
+        cout << "---------------" << endl;
+        v2.show();
+        v.sorted();
+        v.show();
+
         return 0;
 }
