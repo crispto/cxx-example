@@ -1,0 +1,123 @@
+#include <iostream>
+using namespace std;
+class Strvec
+{
+private:
+        string *data, *finish, *end;
+        static allocator<string> alloc;
+
+        string *realloc(size_t n)
+        {
+                free();
+                data = alloc.allocate(n);
+                finish = data;
+                end = data + n;
+                return data;
+        };
+        void free()
+        {
+                for(string *pos =data; pos != finish;pos++){
+                    alloc.destroy(pos);
+                }
+                alloc.deallocate(data, end - data);
+        };
+
+public:
+        Strvec() : data(nullptr), finish(nullptr), end(nullptr){};
+        Strvec(size_t n, const string &s = string())
+        {
+                data = alloc.allocate(n);
+                string *pos = data;
+                for (size_t i = 0; i < n; i++) {
+                        alloc.construct(pos++, s);
+                }
+                end = pos;
+                finish = pos;
+        };
+        Strvec(const Strvec &other)
+        {
+                data = alloc.allocate(other.size());
+                string *pos = data;
+                for (size_t i = 0; i < other.size(); i++) {
+                        alloc.construct(pos++, other[i]);
+                }
+                end = pos;
+                finish = pos;
+        }
+        Strvec &operator=(const Strvec &other)
+        {
+                if (size() < other.size()) {
+                        realloc(other.size());
+                }
+                string *pos = data;
+                for (size_t i = 0; i < other.size(); i++) {
+                        alloc.construct(pos++, other[i]);
+                }
+                finish = pos;
+                return *this;
+        };
+        ~Strvec()
+        {
+                free();
+        }
+        string &operator[](size_t id) const
+        {
+                return data[id];
+        };
+        string &operator[](size_t id)
+        {
+                return data[id];
+        };
+        void push(const string &s)
+        {
+                if (end <= finish) {
+                        // cout << "migrate .. " << endl;
+                        size_t new_size = size() == 0 ? 1 : size() * 2;
+                        string *new_data = alloc.allocate(new_size);
+                        string *pos = new_data;
+                        for (size_t i = 0; i < size(); i++) {
+                                alloc.construct(pos++, std::move(data[i])); // 使用移动来构造函数
+                                // alloc.construct(pos++, data[i]); // 使用copy来构造函数
+                        }
+                        free();
+                        data = new_data;
+                        finish = pos;
+                        end = data + new_size;
+                }
+                alloc.construct(finish++, s);
+        };
+        string pop()
+        {
+                string v = std::move(*finish--);
+                alloc.destroy(finish);
+                return v;
+        };
+        bool empty() const
+        {
+                return finish == data;
+        };
+
+        size_t size() const
+        {
+                return finish - data;
+        };
+        size_t cap() const
+        {
+                return end - data;
+        };
+};
+allocator<string> Strvec::alloc;
+
+int main()
+{
+        Strvec v;
+        for (size_t i = 0; i < 5; i++) {
+                v.push("hello");
+        }
+
+        for (size_t i = 0; i < v.size(); i++) {
+                cout << v[i] << endl;
+        }
+
+        return 0;
+}
