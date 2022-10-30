@@ -16,8 +16,8 @@ private:
         };
         void free()
         {
-                for(string *pos =data; pos != finish;pos++){
-                    alloc.destroy(pos);
+                for (string *pos = data; pos != finish; pos++) {
+                        alloc.destroy(pos);
                 }
                 alloc.deallocate(data, end - data);
         };
@@ -44,6 +44,10 @@ public:
                 end = pos;
                 finish = pos;
         }
+        Strvec(Strvec &&other) : data(other.data), finish(other.data), end(other.end)
+        { // move constructor
+                other.data = other.finish = other.end = nullptr;
+        };
         Strvec &operator=(const Strvec &other)
         {
                 if (size() < other.size()) {
@@ -56,6 +60,15 @@ public:
                 finish = pos;
                 return *this;
         };
+        Strvec &operator=(Strvec &&other)
+        {
+                data = other.data;
+                finish = other.finish;
+                end = other.end;
+                other.data = other.finish = other.end = nullptr;
+                return *this;
+        }
+
         ~Strvec()
         {
                 free();
@@ -119,5 +132,17 @@ int main()
                 cout << v[i] << endl;
         }
 
+        Strvec v2(std::move(v));
+        for (size_t i = 0; i < v2.size(); i++) {
+                cout << v2[i] << endl;
+        }
+
+        for (size_t i = 0; i < v.size(); i++) {
+                cout << v[i] << endl;
+        }
+        std::cout << "v is empty? " << v.empty() << endl;
+        for (size_t i = 0; i < v.size(); i++) {
+                cout << v[i] << endl;
+        }
         return 0;
 }
