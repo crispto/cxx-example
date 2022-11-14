@@ -60,12 +60,12 @@
   "python.linting.enabled": false,
   "python.languageServer": "Pylance",
   "files.associations": {
+    "*.py": "python",
     "iomanip": "cpp",
     "iostream": "cpp",
     "cholesky": "cpp",
     "dense": "cpp",
     "ostream": "cpp",
-    "*.py": "python",
     "deque": "cpp",
     "__locale": "cpp",
     "random": "cpp",
@@ -131,7 +131,8 @@
     "cinttypes": "cpp",
     "typeindex": "cpp",
     "typeinfo": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "queue": "cpp"
   },
   "cmake.configureOnOpen": false
 }
