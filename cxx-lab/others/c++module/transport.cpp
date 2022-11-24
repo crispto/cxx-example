@@ -22,11 +22,11 @@ public:
         Point2d(float x = 0.0, float y = 0.0) : _x(x), _y(y)
         {
         }
-        float x()
+        float x() const
         {
                 return _x;
         }
-        float y()
+        float y() const
         {
                 return _y;
         }
