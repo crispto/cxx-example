@@ -1,43 +1,55 @@
-#pragma pack(0)
 #include <iostream>
+#include <queue>
+#include <mutex>
+#include <thread>
 
-// create a class, implement default, base, copy, move constructor, overload operator =, ==, <<, >>, []
 using namespace std;
+class Processor{
+        public:
+        Processor(int batch_size, int64_t timeout);
+        void submit(int frame_id,  int(*func)(int*) );
 
-class Foo{
-  public:
-  Foo()=default;
-  virtual void ShowName();
+        private:
+        int batch_size_;
+        int64_t time_out_;
+        queue<int> que;
+        queue<int(*)(int*)> que_f;
+        mutex mtx;
+        thread monitor;
+        int64_t timing;
 
-  public:
-  unsigned short k;
-  int* ptr;
-  static const  int const_p =102;
-  static int noconst_p;
+        private:
+        int* exe_batch();
 };
-const int Foo::const_p; // 为什么没有这句仍然可以取值，但无法取到地址
-int Foo::noconst_p = 31;
 
-void Foo::ShowName(){
-  cout << "Foo base called " << endl;
+Processor::Processor(int batch_size, int64_t timeout): batch_size_(batch_size), time_out_(timeout){
+        monitor = thread([this](){
+                while(true){
+                        if (timing > time_out_){
+                                mtx.lock();
+                                exe_batch();
+                                mtx.unlock();
+                                timing = 0;
+                        }else{
+                                mtx.lock();
+                                if(que.size() >= batch_size_){
+                                        exe_batch();
+                                        timing = 0;
+                                }
+                                mtx.unlock();
+                                
+                        }
+
+                }
+        });
+};
+
+void Processor::submit(int frame_id, int(*func)(int*)){
+        lock_guard<mutex> k(mtx);
+        que.push(frame_id);
+
 }
 
-const string a = "hello";
-const string b = "world";
-int main(){
-  Foo f;
-  cout <<"size: "<< sizeof(Foo) << endl;
-  cout << "addr of f: " << &f << endl;
-  cout << "addr of ptr: " << &f.ptr << endl;
-  cout << "addr of k: " << &f.k << endl;
-  cout << "value " << Foo::const_p << ", noconst: " << Foo::noconst_p << endl;
-  cout << "addr of noconst_p: " << &(Foo::noconst_p) << endl;
+int* Processor::exe_batch(int num){
 
-  //not a good idea 
-  cout << "addr of const_p: " << &(Foo::const_p) << endl;
-  cout << "addr of const global var: " << "a :" << &a << ", b: " << &b<<std::endl;
-
-
-
-  return 0;
 }
