@@ -3,3 +3,5 @@ build
 bin
 tmp*
 .vscode
+main
+a.out

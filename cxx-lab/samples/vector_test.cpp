@@ -71,9 +71,9 @@ class Tmp
     {
         std::cout << "tmp destory" << std::endl;
     }
-    void yaw(){
+    void yaw()
+    {
         std::cout << "yaw" << std::endl;
-
     }
 };
 int test_scope()
@@ -84,8 +84,30 @@ int test_scope()
     this_thread::sleep_for(chrono::seconds(1));
     cout << "endof test_scope" << std::endl;
 }
+#include <random>
+
+string minNumber(vector<int>& nums) {
+    std::sort(nums.begin(), nums.end(), [](int i , int j ){
+        string v1 = to_string(i) +to_string(j);
+        string v2 = to_string(j) +to_string(i);
+        cout <<"v1 v2" <<v1 <<", " <<v2 <<endl;
+        return v1.compare(v2) <0 ;
+        });
+    string ret = "";
+    for(auto & k : nums){
+        ret += to_string(k);
+    }
+    return ret;
+}
 int main()
 {
-    test_scope();
+   vector<int> nums = {3,30,34,5,9};
+   string k = minNumber(nums);
+   cout <<k <<endl;
+   string  v1 = "330";
+   string v2 = "303";
+
+   cout <<v1.compare(v2) <<endl;
+
     return 0;
 }
