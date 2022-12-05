@@ -5,3 +5,5 @@ tmp*
 .vscode
 main
 a.out
+.vscode-back
+main.dSYM

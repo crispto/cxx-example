@@ -50,6 +50,6 @@ void Processor::submit(int frame_id, int(*func)(int*)){
 
 }
 
-int* Processor::exe_batch(int num){
-
+int* Processor::exe_batch(){
+        return nullptr;
 }
