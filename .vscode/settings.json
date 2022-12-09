@@ -6,7 +6,7 @@
   "editor.insertSpaces": true,
   "editor.formatOnSave": false,
   "explorer.confirmDelete": false,
-  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.defaultProfile.linux": "bash",
   "window.titleBarStyle": "custom",
   //
   // go setting
@@ -43,7 +43,7 @@
   // "gulp.autoDetect": "on",
   // "grunt.autoDetect": "on",
   // "jake.autoDetect": "on",
-  "C_Cpp.errorSquiggles": "Disabled",
+  "C_Cpp.errorSquiggles": "disabled",
   "[c]": {
     "editor.defaultFormatter": "xaver.clang-format"
   },
@@ -51,6 +51,8 @@
   "[cpp]": {
     "editor.defaultFormatter": "xaver.clang-format"
   },
+  "testMate.cpp.test.advancedExecutables": [{"pattern": "${workspaceFolder}/cxx-lab/install/bin/*Tests"}],
+  "testMate.cpp.log.logpanel": true,
   "[python]": {
     "editor.defaultFormatter": "ms-python.python",
   },
@@ -134,5 +136,31 @@
     "valarray": "cpp",
     "queue": "cpp"
   },
-  "cmake.configureOnOpen": false
+  "cmake.configureOnOpen": false,
+  "editor.fontSize": 14,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "googletest.failed",
+        "settings": {
+          "foreground": "#f00"
+        }
+      },
+      {
+        "scope": "googletest.passed",
+        "settings": {
+          "foreground": "#0f0"
+        }
+      },
+      {
+        "scope": "googletest.run",
+        "settings": {
+          "foreground": "#0f0"
+        }
+      }
+    ]
+  },
+  "gtest-adapter.debugConfig": [
+    "cpp条"
+  ]
 }
