@@ -27,7 +27,9 @@ vector<pair<double, double>> mock_data()
 
 int cal_gpu()
 {
+    return 0;
 }
+
 int factorial(int n)
 {
     if (n == 0)

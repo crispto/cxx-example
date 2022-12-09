@@ -7,3 +7,5 @@ main
 a.out
 .vscode-back
 main.dSYM
+*.dSYM
+out.txt

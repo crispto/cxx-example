@@ -2,13 +2,11 @@
   //global settting
   "workbench.colorTheme": "Monokai",
   "editor.wordWrap": "on",
-  "editor.tabSize": 2,
+  "editor.tabSize": 4,
   "editor.insertSpaces": true,
   "editor.formatOnSave": false,
   "explorer.confirmDelete": false,
   "terminal.integrated.defaultProfile.linux": "bash",
-  "window.titleBarStyle": "custom",
-  //
   // go setting
   "go.testFlags": [
     "-v"
@@ -17,32 +15,7 @@
     "debugAdapter": "legacy",
   },
   "go.useLanguageServer": true,
-  //
-  // vue setting
-  "vetur.format.defaultFormatter.html": "js-beautify-html",
-  // "[html]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
-  // "[vue]": {
-  //   "editor.defaultFormatter": "octref.vetur"
-  // },
-  // "editor.fontSize": 13,
-  // "[javascript]": {
-  //   "editor.defaultFormatter": "vscode.typescript-language-features"
-  // },
-  // "[jsonc]": {
-  //   "editor.defaultFormatter": "vscode.json-language-features"
-  // },
-  // "[json]": {
-  //   "editor.defaultFormatter": "vscode.json-language-features"
-  // },
-  // "workbench.editorAssociations": {
-  //   "*.ipynb": "jupyter.notebook.ipynb"
-  // },
-  // "workbench.startupEditor": "newUntitledFile",
-  // "gulp.autoDetect": "on",
-  // "grunt.autoDetect": "on",
-  // "jake.autoDetect": "on",
+  
   "C_Cpp.errorSquiggles": "disabled",
   "[c]": {
     "editor.defaultFormatter": "xaver.clang-format"
@@ -59,8 +32,12 @@
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "python.formatting.provider": "autopep8",
   "python.linting.pylintEnabled": true,
-  "python.linting.enabled": false,
+  "python.linting.enabled": true,
   "python.languageServer": "Pylance",
+  "python.linting.pylintArgs": [
+    "--max-line-length=80",
+    "--disable=W0613,W0232,R0903,R0913,C0103,R0914,C0304,F0401,W0402,E1101,W0614,C0111,C0301"
+],
   "files.associations": {
     "*.py": "python",
     "iomanip": "cpp",
@@ -134,9 +111,28 @@
     "typeindex": "cpp",
     "typeinfo": "cpp",
     "valarray": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "__bit_reference": "cpp",
+    "__config": "cpp",
+    "__debug": "cpp",
+    "__errc": "cpp",
+    "__functional_base": "cpp",
+    "__hash_table": "cpp",
+    "__mutex_base": "cpp",
+    "__node_handle": "cpp",
+    "__nullptr": "cpp",
+    "__split_buffer": "cpp",
+    "__string": "cpp",
+    "__threading_support": "cpp",
+    "__tree": "cpp",
+    "__tuple": "cpp",
+    "bit": "cpp",
+    "compare": "cpp",
+    "ios": "cpp",
+    "locale": "cpp",
+    "stack": "cpp",
+    "variant": "cpp"
   },
-  "cmake.configureOnOpen": false,
   "editor.fontSize": 14,
   "editor.tokenColorCustomizations": {
     "textMateRules": [
@@ -159,8 +155,5 @@
         }
       }
     ]
-  },
-  "gtest-adapter.debugConfig": [
-    "cpp条"
-  ]
+  }
 }
