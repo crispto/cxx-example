@@ -1,24 +1,20 @@
 #include <iostream>
+
+// typedef bool (*compare)(int i, int j);
 using namespace std;
 
+int main()
+{
+   using person = struct {
+        int age;
+        string name;
+        void show(){
+                printf("age: %d, name: %s\n", age, name.c_str());
+        }
+   };
 
-static void _check(int val, const char * fun, const char* file, int line){
-        cout << "val " << val << endl;
-        cout << "fun " << fun << endl;
-        cout << "file " << file << endl;
-        cout << "line " << line << endl;
-        
+   person k{12, "yang"};
+   k.show();
 
-}
-#define checkErrors(val) _check((val), (#val), __FILE__, __LINE__)
-
-
-int get_int(){
-        return 10;
-}
-
-int main(){
-
-        checkErrors(get_int());
-        return 0;
+return 0;
 }
