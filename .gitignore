@@ -9,3 +9,5 @@ a.out
 main.dSYM
 *.dSYM
 out.txt
+node_modules
+gmon.out

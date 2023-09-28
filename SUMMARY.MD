@@ -1,0 +1,4 @@
+## doc of laboratory
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+
+this is the summary of the laboratory
