@@ -2,10 +2,10 @@
 run:
 	./build/main
 perf:
-	# g++ -O0 -pg main.cpp
-	# -rm gmon.out
-	# ./a.out
-	gprof --format=callgrind ./a.out gmon.out |gprof2dot --format=callgrind --relative-calls -w |dot -Gdpi=200 -Tpng -o out.png
+	g++ -O0 -pg main.cpp
+	-rm gmon.out
+	./a.out
+	gprof  ./a.out gmon.out |gprof2dot  -w |dot -Gdpi=200 -Tpng -o out.png
 cmake: clean
 	test ! -e build &&  mkdir build
 	cd build && cmake ..
