@@ -1,0 +1,3 @@
+/home/coding/github/laboratory/cpp-lab/tmps/samples/boost-example/CMakeFiles/main.dir
+/home/coding/github/laboratory/cpp-lab/tmps/samples/boost-example/CMakeFiles/edit_cache.dir
+/home/coding/github/laboratory/cpp-lab/tmps/samples/boost-example/CMakeFiles/rebuild_cache.dir

@@ -1,13 +1,4 @@
-install
-build
-bin
-tmp*
-.vscode
-main
 a.out
-.vscode-back
-main.dSYM
-*.dSYM
-out.txt
-node_modules
-gmon.out
+main
+build
+

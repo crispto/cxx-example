@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/main.dir/base.cpp.o -o main  /home/richard/miniconda3/lib/libboost_date_time.a /home/richard/miniconda3/lib/libboost_filesystem.a /home/richard/miniconda3/lib/libboost_iostreams.a /home/richard/miniconda3/lib/libboost_program_options.a 
