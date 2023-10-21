@@ -1,6 +1,0 @@
-{
-    find_program = {
-        xrepo = "/home/SENSETIME/yangchengwei/.local/bin/xrepo",
-        ping = "/bin/ping"
-    }
-}

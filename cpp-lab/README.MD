@@ -21,3 +21,8 @@ cmake ..
 make
 
 ```
+
+```bash 
+@echo 'hello world.'
+
+```
