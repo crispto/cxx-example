@@ -12,5 +12,5 @@ clean:
 install: build
 	cmake --install build
 
-run: build-only
+run:
 	./build/bin/${cmd}
