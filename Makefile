@@ -1,16 +1,15 @@
-.PHONY: clean build install
+.PHONY: clean build
 
 build: clean
 	cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-	-DCMAKE_INSTALL_PREFIX=./install
+	-DBUILD_EXAMPLES=ON
 	cmake --build build
-build-only:
-	cmake --build build
+
 clean:
 	rm -rf build install
 
-install: build
-	cmake --install build
+install:
+	cmake --install build --prefix ./install
 
 run:
 	./build/bin/${cmd}

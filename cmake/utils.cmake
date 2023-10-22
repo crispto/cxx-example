@@ -1,6 +1,5 @@
 macro(install_headers)
 foreach(header ${ARGN})
-    message(WARNING "installing ${header}")
     get_filename_component(header_dir ${header} DIRECTORY)
     install(FILES ${header} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${header_dir})
 endforeach(header ${ARGN})

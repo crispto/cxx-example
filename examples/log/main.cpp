@@ -1,3 +1,4 @@
+#define LOG_MODULE_ID "log_main"
 #include <iostream>
 #include <string>
 
