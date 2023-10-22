@@ -1,20 +1,20 @@
 cmake_minimum_required(VERSION 3.20)
 project(cxx-lab)
 # In your CMakeLists.txt
-list(APPEND CMAKE_PREFIX_PATH "/usr/local/lib/cmake")
+# list(APPEND CMAKE_PREFIX_PATH "/usr/local/lib/cmake")
+include(cmake/utils.cmake)
 
-set(MODULES)
-list(APPEND MODULES log)
+set(CMAKE_INSTALL_INCLUDEDIR "include") # 设置头文件安装的目录
+
+
 
 find_package(tbox COMPONENTS base util alarm event eventx)
 if(NOT tbox_FOUND)
     message(WARNING "PCAKGE NOT FOUND")
 endif()
 
-foreach(item IN LISTS MODULES)
-    message(NOTICE "item is ${item}")
-    add_subdirectory(examples/${item})
-endforeach()
+add_subdirectory(modules)
+add_subdirectory(examples)
 
 
 if(TEST)

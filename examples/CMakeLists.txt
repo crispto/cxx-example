@@ -1,0 +1,6 @@
+set(EXAMPLES)
+list(APPEND EXAMPLES log)
+foreach(item IN LISTS EXAMPLES)
+    message(NOTICE "item is ${item}")
+    add_subdirectory(${item})
+endforeach()
