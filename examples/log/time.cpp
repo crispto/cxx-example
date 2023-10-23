@@ -1,6 +1,8 @@
 #include <iostream>
 #include <lab/time/time.hpp>
 #include <string>
+using namespace lab;
+
 int main()
 {
     std::string v = get_time_now_str();
