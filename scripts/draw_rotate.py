@@ -40,23 +40,48 @@ def draw_roate_point(center):
             frame, center, (center[0] + n_x, center[1] + n_y), (255, 0, 0), 2)
         cv2.putText(frame, f"degreee: {i*5}", (20, 40), 1, 1, (0, 0, 255), 1)
         cv2.imshow("Moving Box", frame)
-        if cv2.waitKey(1000) & 0xFF == 27:  # Break the loop with the 'Esc' key
+        if cv2.waitKey(1000) == ord('q'):  # Break the loop with the 'Esc' key
             break
 
 
-def draw_one_car(frame, org, is_fusion, speed, speed_heading, car_size, car_heading):
+def format_rt_mat(rotate, trans):
+    """构建旋转平移矩阵
+
+    Args:
+        rotate (float): 弧度
+        trans (_type_): 平移矩阵
+    """
+    return np.array([cos(rotate), -1 * sin(rotate), 0],
+                    [sin(rotate), cos(rotate), 0],
+                    [trans[0], trans[1], 1])
+
+
+def draw_one_car(frame, pos, is_fusion, speed, speed_heading, car_size, car_heading):
     """绘制一辆车
 
     Args:
         frame (_type_): 背景
-        org (_type_): 位置 (x, y)
+        pos (_type_): 位置 (x, y)
         is_fusion (bool): 是否来自多个设备融合
         speed (_type_): 速度
         speed_heading (_type_): 速度朝向角
         car_size (_type_): 车身 (width, length, height)
         car_heading (_type_): 车身朝向角 (度)
     """
-    pass
+    width, length, _ = car_size
+    # 原点出的四个角
+    car_body_points = np.array([[length / 2, width / 2], [length / 2, - width / 2],
+                               [-length / 2, width / 2], [-length / 2, -width / 2]])
+    # 旋转平移后真实的绘制地址
+    tmp_car_body_points = np.hstack(car_body_points, np.full(4, 1), 1)
+    car_rotate_mat = format_rt_mat(car_heading, pos)
+    draw_car_points = (tmp_car_body_points * car_rotate_mat).astype(int)
+    # 将点连起来
+    to_connect = [[0, 1], [1, 3], [3, 2], [2, 0]]
+    for line_index in to_connect:
+        p1 = draw_car_points[to_connect[0]][:2]
+        p2 = draw_car_points[to_connect[1]][:2]
+        cv2.line(frame, draw_car_points, p1, p2, 1)
 
 
 def draw_moving_box():
@@ -83,7 +108,7 @@ def draw_moving_box():
 
         box_x += 5  # Move the box to the right
 
-      # Release the video writer and close the window
+        # Release the video writer and close the window
     out.release()
 
 
