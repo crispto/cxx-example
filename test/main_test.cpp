@@ -7,7 +7,7 @@
 #include <queue>
 #include <utility>
 using std::pair;
-
+#define show(x) cout << x::tell() << endl;
 struct split_string_ret {
     string src;
     char dim;
