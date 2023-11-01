@@ -5,6 +5,7 @@ project(cxx-lab)
 include(cmake/utils.cmake)
 # 设置 modules中头文件安装的目录
 set(CMAKE_INSTALL_INCLUDEDIR "include/lab")
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(tbox COMPONENTS base util alarm event eventx)
 if(NOT tbox_FOUND)
@@ -31,12 +32,16 @@ if(BUILD_EXAMPLES)
   endforeach()
 endif()
 
-if(TEST)
+option(WITH_TEST "build test 目录" ON)
+if(WITH_TEST)
+  set(TESTNAME lab_test)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/modules)
   find_package(GTest REQUIRED)
   # message(STATUS "gtest headfile:" ${GTEST_INCLUDE_DIRS}) message(STATUS
   # "gtest libpath:" ${GTEST_BOTH_LIBRARIES})
   include_directories(${GTEST_INCLUDE_DIRS})
-  add_executable(runTests test/main_test.cpp)
-  target_link_libraries(runTests ${GTEST_BOTH_LIBRARIES} pthread)
-  install(TARGETS runTests)
+  add_executable(${TESTNAME} test/main_test.cpp)
+  set_target_properties(${TESTNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                               ${CMAKE_BINARY_DIR}/bin)
+  target_link_libraries(${TESTNAME} ${GTEST_BOTH_LIBRARIES})
 endif()

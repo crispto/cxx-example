@@ -9,23 +9,65 @@
 using namespace std;
 #define PI 3.141592654
 
-float cal_degree(float x, float y)
+void execute(vector<function<void()>> &tasks)
 {
-    float angle_deg = std::atan2(y, x) * 180 / PI;
-    if (angle_deg < 0) {
-        angle_deg = 360 + angle_deg;
+    for (auto &f : tasks) {
+        f();
     }
-    return angle_deg;
+}
+
+void foo()
+{
+    cout << "foo is called" << endl;
+}
+
+struct bob {
+    void operator()()
+    {
+        cout << "bob() is called " << endl;
+    }
+};
+
+class Nes
+{
+public:
+    Nes(const string &name) : name_(name){};
+
+    static int peak(int i, float j)
+    {
+        cout << "Nes::peak is called" << endl;
+        return 1;
+    };
+    void eat(int k)
+    {
+        cout << "Nes.eat is called "
+             << "name: " << name_ << "k is " << k << endl;
+    }
+
+private:
+    string name_;
+};
+
+void show(int i, float j)
+{
+    cout << "i is " << i << endl;
+    cout << "j is " << j << endl;
 }
 
 int main()
 {
-    vector<pair<float, float>> vec{ { 1.2, 1.3 }, { -3.2, 3.3 }, { -3.2, -1.45 }, { 3.4, -1.5 } };
-    for (auto &x : vec) {
-        float deg = cal_degree(x.first, x.second);
+    vector<function<void()>> que;
+    Nes ne{ "li" };
+    Nes ne2{ "go" };
+    que.emplace_back([] { foo(); });
+    que.emplace_back(bob{});
+    que.emplace_back([] { Nes::peak(1, 0.2); });
+    int i = 12;
+    que.emplace_back([&]() { bind(&Nes::eat, &ne, placeholders::_1)(i); });
+    que.emplace_back(bind(&Nes::eat, &ne2, 10));
+    execute(que);
 
-        cout << "degrees is " << deg << endl;
-    }
-
-    return 0;
+    function<void(float, int)> bind_show = bind(show, placeholders::_2, placeholders::_1); 
+    bind_show(1.20, 3);
+    show(4, 1.2);
 }
