@@ -2,9 +2,7 @@ set(EXAMPLE_PREFIX io)
 list(APPEND SRCS main test)
 find_package(Threads)
 
-set(CONAN_INCLUDE_DIRS_EIGEN
-    "/home/SENSETIME/yangchengwei/.conan/data/Eigen/3.4.0/kestrel/v2x/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
-)
+set(CONAN_INCLUDE_DIRS_EIGEN "${CMAKE_SOURCE_DIR}/third-party")
 include_directories(${CONAN_INCLUDE_DIRS_EIGEN})
 find_package(OpenCV REQUIRED)
 message(WARNING "OpenCV_INCLUDE_DIRS IS :${OpenCV_INCLUDE_DIRS}")
