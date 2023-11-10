@@ -1,11 +1,9 @@
 set(EXAMPLE_PREFIX io)
 list(APPEND SRCS main test)
 find_package(Threads)
-set(CONAN_EIGEN_ROOT
-    "/home/SENSETIME/yangchengwei/.conan/data/Eigen/3.4.0/raphael/v2x/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9"
-)
+
 set(CONAN_INCLUDE_DIRS_EIGEN
-    "/home/SENSETIME/yangchengwei/.conan/data/Eigen/3.4.0/raphael/v2x/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
+    "/home/SENSETIME/yangchengwei/.conan/data/Eigen/3.4.0/kestrel/v2x/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
 )
 include_directories(${CONAN_INCLUDE_DIRS_EIGEN})
 find_package(OpenCV REQUIRED)
