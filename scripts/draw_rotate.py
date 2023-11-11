@@ -11,6 +11,11 @@ width, height = 640, 480  # Frame dimensions
 cv2.namedWindow('Moving Box', cv2.WINDOW_NORMAL)
 cv2.resizeWindow('Moving Box', width, height)
 
+# box rotate yaw degree
+
+
+def rotate_bbox():
+    
 
 def rotate_point(x, y, rotate):
     """逆时针旋转一个点

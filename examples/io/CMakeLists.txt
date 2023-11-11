@@ -29,3 +29,7 @@ add_executable(${EXAMPLE_PREFIX}_eigen eigen_demo.cpp)
 
 add_executable(${EXAMPLE_PREFIX}_raphael raphael_demo.cpp)
 target_link_libraries(${EXAMPLE_PREFIX}_raphael PRIVATE ${OpenCV_LIBS})
+
+include_directories(/usr/local/cuda/include)
+set(demoname ${EXAMPLE_PREFIX}_cuda)
+add_executable(${demoname} cuda_demo.cpp)
