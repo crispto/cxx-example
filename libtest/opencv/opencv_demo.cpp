@@ -1,9 +1,5 @@
-#include "opencv2/core/core.hpp"
-#include "opencv2/core/hal/interface.h"
-#include "opencv2/core/matx.hpp"
 #include <iostream>
-#include <opencv2/core/base.hpp>
-#include <opencv2/core/types.hpp>
+#include <opencv2/opencv.hpp>
 #include <string>
 
 using namespace std;

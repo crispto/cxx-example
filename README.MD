@@ -1,28 +1,17 @@
-a laboratory space for c++, where your c++ code can be test conviniently.
+# 一个 C++ 常用工具和组件库
 
-each file in **samples** is a independent test case;
-files in src will build to a libaray called `labor`
-
-# usage
-
-```bash
-// clone project and build library
-git clone ${project_url}
-cd ${project_folder}
-mkdir build && cd build
-cmake ..
-make install
-
-
-// build the sample
-cd samples
-mkdir build &&cd build
-cmake ..
-make
-
+## build 
+```shell
+cmake -B build .
+cmake --build build 
 ```
 
-```bash 
-@echo 'hello world.'
+## Features
 
-```
+- [x] 一个简单的日志库
+- [x] 类似于go的channel和ringbuffer
+
+## examples
+
+## channel 
+

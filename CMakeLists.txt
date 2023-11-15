@@ -13,7 +13,7 @@ if(NOT tbox_FOUND)
 endif()
 
 add_subdirectory(modules)
-# add_subdirectory(examples)
+add_subdirectory(libtest)
 
 # build examples 目录
 option(BUILD_EXAMPLES "build examples 目录" OFF)
@@ -43,5 +43,6 @@ if(WITH_TEST)
   add_executable(${TESTNAME} test/main_test.cpp)
   set_target_properties(${TESTNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
                                                ${CMAKE_BINARY_DIR}/bin)
-  target_link_libraries(${TESTNAME} ${GTEST_BOTH_LIBRARIES})
+  target_link_libraries(${TESTNAME} ${GTEST_BOTH_LIBRARIES}
+                        ${CMAKE_THREAD_LIBS_INIT})
 endif()
