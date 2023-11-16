@@ -2,7 +2,8 @@
 
 build: clean
 	cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-	-DBUILD_EXAMPLES=ON
+	-DBUILD_EXAMPLES=ON \
+	-DCMAKE_BUILD_TYPE=Debug .
 	cmake --build build
 
 clean:

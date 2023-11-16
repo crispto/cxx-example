@@ -5,10 +5,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "cpp条",
+      "name": "(gdb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/main2",
+      "program": "${workspaceFolder}/build/libtest/boost/circle_demo",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
@@ -16,16 +16,16 @@
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
-          {
-              "description": "Enable pretty-printing for gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-          },
-          {
-              "description": "Set Disassembly Flavor to Intel",
-              "text": "-gdb-set disassembly-flavor intel",
-              "ignoreFailures": true
-          }
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
       ]
     },
     {
@@ -33,7 +33,7 @@
       "type": "python",
       "request": "launch",
       "program": "${file}",
-      "cwd":"${workspaceFolder}",
+      "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "justMyCode": true
     },
