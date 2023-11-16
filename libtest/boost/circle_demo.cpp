@@ -15,6 +15,7 @@
 /**
  * @brief 注意的点包括， 1. 唤醒的条件不止有 空->非空或满 ->不满；不要忘记还有 channel close 这个条件，
  * TODO:  可以看出虽然用了多线程，但是因为读写使用一把锁，完全没有利用到 ring buffer 的性质，所以出来的数据还是有序的
+ * TODO: benchmark
  *
  */
 using namespace std;
