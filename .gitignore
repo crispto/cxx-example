@@ -5,3 +5,5 @@ build
 *.avi
 *.mp4
 libtest/kestrel
+__pycache__
+*.pyc
