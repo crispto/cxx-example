@@ -5,7 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 import click
 from utils import nice_colors
-
+from loguru import logger
 
 def getIou(box1, box2, inter_area):
     box1_area = box1[2] * box1[3]
@@ -35,13 +35,12 @@ def getInter(box1, box2):
 
 # onnx 输出的是 bbox 和 80 个类别的置信度，所以需要进行 NMS
 from math import exp
-def soft_nms(pred, conf_thres, iou_thres, sigma=0.4):
+def soft_nms(pred, conf_thres, sigma=0.4):
     """使用 soft nms 进行 NMS
 
     Args:
         pred (_type_): Onnx predict output [8400, 85], [x1, y1, x2, y2, max_conf, *all_conf]
         conf_thres (_type_): 小于该阈值的框被过滤
-        iou_thres (_type_): 和 NMS 一样，IOU大于该阈值的框被过滤
         sigma: 衰减因子
     """
     pred = pred[np.where(pred[:, 4] > conf_thres)]
@@ -49,57 +48,33 @@ def soft_nms(pred, conf_thres, iou_thres, sigma=0.4):
     label_result = np.argmax(conf_all, axis=-1)
     cls_all = list(set(label_result))
     pred = np.insert(pred, 5, label_result, axis=-1) # 将 label 插入到第5
-    pred = pred[..., :6] # 后面的分数抛弃
+    pred = pred[..., :7] # 后面的分数抛弃
+    # pred 格式为 [center_x, center_y, w, h, max_conf, label, max_conf_for_iter]
+    pred[:, 6] = pred[:, 4]
     output_box = []
     for cls in cls_all:
-      cls_box = cls[np.where(pred[:, 5] == cls)]
-      select_box = []
+      cls_box = pred[np.where(pred[:, 5] == cls)]
       
-      # 按得分大小排序
-      sort_indics = np.argsort(cls_box[:, 4])
+      # 按得分逆序排列
+      sort_indics = np.argsort(-cls_box[:, 4])
       cls_box = cls_box[sort_indics]
       # cls_box.sort(key=-1*cls_box[4])
       while len(cls_box):
         M = cls_box[0]
-        select_box.append(M)
+        output_box.append(M)
+        logger.info(f"insert M: label: {M[5]} score: {M[4]}")
         cls_box = np.delete(cls_box, 0, axis=0)
+        to_delete = []
         for i, remain in enumerate(cls_box):
           iou = getIou(M, remain, getInter(M, remain))
-          remain[4] *= exp(-1 * iou ** 2 / sigma)
-          if remain[4] < conf_thres:
-            cls_box = np.delete(cls_box, i, axis=-1)
-      return output_box   
-            
-        
-        
-      
-    
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+          remain[6] *= exp(-1 * iou ** 2 / sigma)
+          # logger.info(f"remain[4] is {remain[4]}")
+          if remain[6] < conf_thres:
+            to_delete.append(i)
+        cls_box = np.delete(cls_box, to_delete, axis=0)
+    return output_box   
+
+
 def nms(pred, conf_thres, iou_thres):
     conf = pred[..., 4] > conf_thres  # 只处理最大置信度大于阈值的框
     box = pred[conf == True]
@@ -181,10 +156,12 @@ def get_class_map(model_path):
             return classmap
 
 
+import os 
 @click.command()
 @click.argument('model_path', default='model/yolov8n.onnx')
 @click.argument('image_path', default='data/crowd.jpeg')
-def run(model_path, image_path):
+@click.option('--use-soft', type=bool, default=True, help="是否使用 soft-nms 策略略")
+def run(model_path, image_path,use_soft):
     height, width = 640, 640
     img0 = cv2.imread(image_path)
     x_scale = img0.shape[1] / width
@@ -197,30 +174,45 @@ def run(model_path, image_path):
 
     label2name = get_class_map(model_path)
     print(f"label2name {label2name}")
-    sess = rt.InferenceSession(model_path)
+        # Define ONNX Runtime session options
+    options = rt.SessionOptions()
+    options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL  # Enable all optimizations
+
+    # Specify the target device (GPU)
+    options.execution_mode = rt.ExecutionMode.ORT_SEQUENTIAL
+    options.device_id = 0  # Specify the GPU device ID
+
+    sess = rt.InferenceSession(model_path, options)
     input_name = sess.get_inputs()[0].name
     output_name = sess.get_outputs()[0].name
 
     print(f"input name: {input_name}, output name: {output_name}")
-    pred = sess.run([output_name], {input_name: data.astype(np.float32)})[0]
-    print(f"onnx output {pred.shape}")
-    pred = np.squeeze(pred)  # 去掉 batch 维度
-    pred = np.transpose(pred, (1, 0))
+    for i in range(10000):
+      pred = sess.run([output_name], {input_name: data.astype(np.float32)})[0]
+      if i >0:
+        continue
+      print(f"onnx output {pred.shape}")
+      pred = np.squeeze(pred)  # 去掉 batch 维度
+      pred = np.transpose(pred, (1, 0))
 
-    # onnx 输出的是 bbox 和 80 个类别的置信度 [8400, 84]
-    pred_class = pred[..., 4:]
-    pred_conf = np.max(pred_class, axis=-1)
-    # 将类别概率插入到原来的 pred 中，方便后面进行 NMS
-    pred = np.insert(pred, 4, pred_conf, axis=-1)
-
-    result = nms(pred, 0.3, 0.45)  # 进行 NMS
-    print(f"result.shape: {len(result)}")
-    ret_img = img0.copy()
-    draw(ret_img, x_scale, y_scale, result, label2name)
-    print("result is ", [re.tolist() for re in result])
-    ret_img = ret_img[:, :, ::-1]  # turn BGR to RGB
-    plt.imshow(ret_img)
-    plt.show()
+      # onnx 输出的是 bbox 和 80 个类别的置信度 [8400, 84]
+      pred_class = pred[..., 4:]
+      pred_conf = np.max(pred_class, axis=-1)
+      # 将类别概率插入到原来的 pred 中，方便后面进行 NMS
+      pred = np.insert(pred, 4, pred_conf, axis=-1)
+      if use_soft:
+        result = soft_nms(pred, 0.3, 0.4)
+      else:
+        result = nms(pred, 0.3, 0.45)  # 进行 NMS
+      print(f"result.shape: {len(result)}")
+      ret_img = img0.copy()
+      draw(ret_img, x_scale, y_scale, result, label2name)
+      ret_img = ret_img[:, :, ::-1]  # turn BGR to RGB
+      plt.imshow(ret_img)
+      plt.show()
+      filename =  "detect_soft_nms.jpg" if use_soft else "detect_nms.jpg"
+      filename = os.path.join("out", filename)
+      plt.imsave(filename, ret_img)
 
 
 if __name__ == '__main__':

@@ -33,17 +33,16 @@ def draw(img, xscale, yscale, results):
 @click.argument('model_path', default='model/yolov8n.pt')
 @click.argument('img_path', default='data/crowd.jpeg')
 def run(model_path, img_path):
-    # height, width = 640, 640
-    # img0 = cv2.imread('data/crowd.jpeg')
-    # x_scale = img0.shape[1] / width
-    # y_scale = img0.shape[0] / height
-    # img = cv2.resize(img0, (width, height))
-    # img = img0 / 255. # normalize to [0, 1]
-    # img = np.transpose(img, (2, 0, 1)) # convert origin format HWC to CHW
-    # img = np.expand_dims(img, axis=0)
+    height, width = 640, 640
+    img0 = cv2.imread(img_path)
+    x_scale = img0.shape[1] / width
+    y_scale = img0.shape[0] / height
+    img = cv2.resize(img0, (width, height))
+    img = img / 255. # normalize to [0, 1]
+    img = np.transpose(img, (2, 0, 1)) # convert origin format HWC to CHW
+    img = np.expand_dims(img, axis=0)
 
     model = YOLO(model_path)
-    img = cv2.imread(img_path)
     results = model.predict(source=img, project="detect", name="crowd")
 
     # dump detections to json file
@@ -51,7 +50,7 @@ def run(model_path, img_path):
     # with open('results.json', 'w') as f:
     #     json.dump(targets, f, indent=2)
 
-    draw(img, 1, 1, results)
+    draw(img0, x_scale, y_scale, results)
     if not os.path.exists('out'):
         os.makedirs('out')
     cv2.imwrite('out/yolo-output.jpg', img)
