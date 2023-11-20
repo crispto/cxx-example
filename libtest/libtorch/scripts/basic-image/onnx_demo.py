@@ -1,11 +1,15 @@
 import onnx
-import onnxruntime as rt
+import onnxruntime
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import click
 from utils import nice_colors
 from loguru import logger
+import os 
+import psutil
+import time
+
 
 def getIou(box1, box2, inter_area):
     box1_area = box1[2] * box1[3]
@@ -62,7 +66,6 @@ def soft_nms(pred, conf_thres, sigma=0.4):
       while len(cls_box):
         M = cls_box[0]
         output_box.append(M)
-        logger.info(f"insert M: label: {M[5]} score: {M[4]}")
         cls_box = np.delete(cls_box, 0, axis=0)
         to_delete = []
         for i, remain in enumerate(cls_box):
@@ -151,17 +154,16 @@ def get_class_map(model_path):
     model = onnx.load(model_path)
     for meta in model.metadata_props:
         if meta.key == 'names':
-            print(meta.value)
             classmap = ast.literal_eval(meta.value)
             return classmap
 
 
-import os 
 @click.command()
 @click.argument('model_path', default='model/yolov8n.onnx')
 @click.argument('image_path', default='data/crowd.jpeg')
 @click.option('--use-soft', type=bool, default=True, help="是否使用 soft-nms 策略略")
-def run(model_path, image_path,use_soft):
+@click.option('--use-gpu', type=bool, default=True, help="是否使用 gpu 运行推理")
+def run(model_path, image_path, use_soft, use_gpu):
     height, width = 640, 640
     img0 = cv2.imread(image_path)
     x_scale = img0.shape[1] / width
@@ -173,18 +175,30 @@ def run(model_path, image_path,use_soft):
     # get meta
 
     label2name = get_class_map(model_path)
-    print(f"label2name {label2name}")
-   
-    sess = rt.InferenceSession(model_path)
-    input_name = sess.get_inputs()[0].name
-    output_name = sess.get_outputs()[0].name
+    # Define ONNX Runtime session options
+    print(f"provider {onnxruntime.get_available_providers()}")
+    assert 'CUDAExecutionProvider' in onnxruntime.get_available_providers()
+    if use_gpu:
+      sess_options = onnxruntime.SessionOptions()
+      # Please change the value according to best setting in Performance Test Tool result.
+      sess_options.intra_op_num_threads=psutil.cpu_count(logical=True)
 
+      session = onnxruntime.InferenceSession(model_path, sess_options, providers=["CUDAExecutionProvider", "CPUExecutionProvider"])
+    else:
+      session = onnxruntime.InferenceSession(model_path)
+
+    input_name = session.get_inputs()[0].name
+    output_name = session.get_outputs()[0].name
+    
     print(f"input name: {input_name}, output name: {output_name}")
-    for i in range(10000):
-      pred = sess.run([output_name], {input_name: data.astype(np.float32)})[0]
+    N = 1000
+    start = time.time()
+    for i in range(N):
+      if i % 100 == 0:
+        logger.debug(f"running {i} epoch")
+      pred = session.run([output_name], {input_name: data.astype(np.float32)})[0]
       if i >0:
         continue
-      print(f"onnx output {pred.shape}")
       pred = np.squeeze(pred)  # 去掉 batch 维度
       pred = np.transpose(pred, (1, 0))
 
@@ -197,15 +211,20 @@ def run(model_path, image_path,use_soft):
         result = soft_nms(pred, 0.3, 0.4)
       else:
         result = nms(pred, 0.3, 0.45)  # 进行 NMS
-      print(f"result.shape: {len(result)}")
       ret_img = img0.copy()
       draw(ret_img, x_scale, y_scale, result, label2name)
       ret_img = ret_img[:, :, ::-1]  # turn BGR to RGB
-      plt.imshow(ret_img)
-      plt.show()
+      
+      # format 
       filename =  "detect_soft_nms.jpg" if use_soft else "detect_nms.jpg"
       filename = os.path.join("out", filename)
       plt.imsave(filename, ret_img)
+      
+    time_cost =time.time()- start
+    device = 'cpu'
+    if use_gpu:
+      device= 'gpu'
+    logger.info(f"average time cost : {time_cost/N}s, device: {device}")
 
 
 if __name__ == '__main__':
