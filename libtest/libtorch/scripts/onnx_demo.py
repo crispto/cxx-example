@@ -34,8 +34,72 @@ def getInter(box1, box2):
     return inter
 
 # onnx 输出的是 bbox 和 80 个类别的置信度，所以需要进行 NMS
+from math import exp
+def soft_nms(pred, conf_thres, iou_thres, sigma=0.4):
+    """使用 soft nms 进行 NMS
 
-
+    Args:
+        pred (_type_): Onnx predict output [8400, 85], [x1, y1, x2, y2, max_conf, *all_conf]
+        conf_thres (_type_): 小于该阈值的框被过滤
+        iou_thres (_type_): 和 NMS 一样，IOU大于该阈值的框被过滤
+        sigma: 衰减因子
+    """
+    pred = pred[np.where(pred[:, 4] > conf_thres)]
+    conf_all = pred[:, 5:]
+    label_result = np.argmax(conf_all, axis=-1)
+    cls_all = list(set(label_result))
+    pred = np.insert(pred, 5, label_result, axis=-1) # 将 label 插入到第5
+    pred = pred[..., :6] # 后面的分数抛弃
+    output_box = []
+    for cls in cls_all:
+      cls_box = cls[np.where(pred[:, 5] == cls)]
+      select_box = []
+      
+      # 按得分大小排序
+      sort_indics = np.argsort(cls_box[:, 4])
+      cls_box = cls_box[sort_indics]
+      # cls_box.sort(key=-1*cls_box[4])
+      while len(cls_box):
+        M = cls_box[0]
+        select_box.append(M)
+        cls_box = np.delete(cls_box, 0, axis=0)
+        for i, remain in enumerate(cls_box):
+          iou = getIou(M, remain, getInter(M, remain))
+          remain[4] *= exp(-1 * iou ** 2 / sigma)
+          if remain[4] < conf_thres:
+            cls_box = np.delete(cls_box, i, axis=-1)
+      return output_box   
+            
+        
+        
+      
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 def nms(pred, conf_thres, iou_thres):
     conf = pred[..., 4] > conf_thres  # 只处理最大置信度大于阈值的框
     box = pred[conf == True]
