@@ -163,8 +163,8 @@ def run(model_path, video_path, outpath, use_soft, executer, bench_num):
     # 读取视频的宽高
     height0, width0 = test_img.shape[:2]
     logger.info(f"video size: {width0}x{height0}")
-    cv2.namedWindow("result", cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("result", width0, height0)
+    # cv2.namedWindow("result", cv2.WINDOW_NORMAL)
+    # cv2.resizeWindow("result", width0, height0)
     height, width = 640, 640
     x_scale = width0 / width
     y_scale = height0 / height
@@ -188,6 +188,7 @@ def run(model_path, video_path, outpath, use_soft, executer, bench_num):
 
       session = onnxruntime.InferenceSession(model_path, sess_options, providers=["CUDAExecutionProvider"])
     else:
+      sess_options = onnxruntime.SessionOptions()
       sess_options.intra_op_num_threads=psutil.cpu_count(logical=True)
 
       session = onnxruntime.InferenceSession(model_path, sess_options,  providers=["CPUExecutionProvider"])
@@ -200,6 +201,7 @@ def run(model_path, video_path, outpath, use_soft, executer, bench_num):
       ok, img0 = cap.read()
       if not ok:
         break
+      # if you set bench_num, then only run bench_num frames, may be useful for benchmark
       if bench_num >0 and frame_id > bench_num:
         break
       frame_id += 1
