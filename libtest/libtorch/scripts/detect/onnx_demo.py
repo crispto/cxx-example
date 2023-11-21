@@ -9,6 +9,7 @@ from loguru import logger
 import os 
 import psutil
 import time
+from utils import draw_onnx as draw
 
 
 def getIou(box1, box2, inter_area):
@@ -125,37 +126,21 @@ def nms(pred, conf_thres, iou_thres):
     return output_box
 
 
-def draw(img, xscale, yscale, results, label2name):
-    for box in results:
-        pos = box[:4]
-        # onnx 输出的是中心点坐标和宽高，需要转换成左上角和右下角坐标
-        pos = [pos[0] - pos[2]/2, pos[1] - pos[3] /
-               2, pos[0] + pos[2]/2, pos[1] + pos[3]/2]
-        score = box[4]
-        label = int(box[5])
-        name = label2name[label]
-        # print(f"{name}: {score}, {pos}, {pos2}, {label}")
-        text = f"{name}: {score:.2f}"
-        # draw rectrange and label with cv2
-        font_size = 0.7
-        lefttop = (int(pos[0]*xscale), int(pos[1]*yscale))
-        rightbottom = (int(pos[2]*xscale), int(pos[3]*yscale))
-        cv2.rectangle(img, lefttop, rightbottom, (0, 255, 0), 2)
-        cv2.rectangle(img, lefttop, (lefttop[0]+len(text)*12,
-                                     lefttop[1] - 14), nice_colors[len(nice_colors)-label-1], -1)
-        cv2.putText(img, text, lefttop, cv2.FONT_HERSHEY_SIMPLEX,
-                    font_size, (255, 255, 255), 2)
+def get_onnx_class_map(model_path: str):
+  """加载 Onnx 模型并通过 onxx api 获取 label 到 name 的映射
 
+  Args:
+      model_path (str): 模型路径
 
-def get_class_map(model_path):
-    """获取类别映射关系
-    """
-    import ast
-    model = onnx.load(model_path)
-    for meta in model.metadata_props:
-        if meta.key == 'names':
-            classmap = ast.literal_eval(meta.value)
-            return classmap
+  Returns:
+      dict: label -> name
+  """
+  import ast
+  model = onnx.load(model_path)
+  for meta in model.metadata_props:
+      if meta.key == 'names':
+          classmap = ast.literal_eval(meta.value)
+          return classmap
 
 
 @click.command()
@@ -174,7 +159,7 @@ def run(model_path, image_path, use_soft, use_gpu):
     data = np.expand_dims(img, axis=0)
     # get meta
 
-    label2name = get_class_map(model_path)
+    label2name = get_onnx_class_map(model_path)
     # Define ONNX Runtime session options
     print(f"provider {onnxruntime.get_available_providers()}")
     assert 'CUDAExecutionProvider' in onnxruntime.get_available_providers()
@@ -191,40 +176,32 @@ def run(model_path, image_path, use_soft, use_gpu):
     output_name = session.get_outputs()[0].name
     
     print(f"input name: {input_name}, output name: {output_name}")
-    N = 1000
-    start = time.time()
-    for i in range(N):
-      if i % 100 == 0:
-        logger.debug(f"running {i} epoch")
-      pred = session.run([output_name], {input_name: data.astype(np.float32)})[0]
-      if i >0:
-        continue
-      pred = np.squeeze(pred)  # 去掉 batch 维度
-      pred = np.transpose(pred, (1, 0))
+    pred = session.run([output_name], {input_name: data.astype(np.float32)})[0]
+    pred = np.squeeze(pred)  # 去掉 batch 维度
+    pred = np.transpose(pred, (1, 0))
 
-      # onnx 输出的是 bbox 和 80 个类别的置信度 [8400, 84]
-      pred_class = pred[..., 4:]
-      pred_conf = np.max(pred_class, axis=-1)
-      # 将类别概率插入到原来的 pred 中，方便后面进行 NMS
-      pred = np.insert(pred, 4, pred_conf, axis=-1)
-      if use_soft:
-        result = soft_nms(pred, 0.3, 0.4)
-      else:
-        result = nms(pred, 0.3, 0.45)  # 进行 NMS
-      ret_img = img0.copy()
-      draw(ret_img, x_scale, y_scale, result, label2name)
-      ret_img = ret_img[:, :, ::-1]  # turn BGR to RGB
+    # onnx 输出的是 bbox 和 80 个类别的置信度 [8400, 84]
+    pred_class = pred[..., 4:]
+    pred_conf = np.max(pred_class, axis=-1)
+    # 将类别概率插入到原来的 pred 中，方便后面进行 NMS
+    pred = np.insert(pred, 4, pred_conf, axis=-1)
+    if use_soft:
+      result = soft_nms(pred, 0.3, 0.4)
+    else:
+      result = nms(pred, 0.3, 0.45)  # 进行 NMS
+    ret_img = img0.copy()
+    draw(ret_img, x_scale, y_scale, result, label2name)
+    ret_img = ret_img[:, :, ::-1]  # turn BGR to RGB
+    
+    # format 
+    filename =  "detect_soft_nms.jpg" if use_soft else "detect_nms.jpg"
+    filename = os.path.join("out", filename)
+    plt.imsave(filename, ret_img)
       
-      # format 
-      filename =  "detect_soft_nms.jpg" if use_soft else "detect_nms.jpg"
-      filename = os.path.join("out", filename)
-      plt.imsave(filename, ret_img)
-      
-    time_cost =time.time()- start
     device = 'cpu'
     if use_gpu:
       device= 'gpu'
-    logger.info(f"average time cost : {time_cost/N}s, device: {device}")
+    logger.info(f"run over device: {device}")
 
 
 if __name__ == '__main__':
