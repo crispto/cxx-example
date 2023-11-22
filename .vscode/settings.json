@@ -1,4 +1,8 @@
 {
+    "cmakeFormat.args": [
+        "--config-file",
+        "${workspaceFolder}/.cmake-format.py"
+    ],
     "testMate.cpp.test.advancedExecutables": [
         {
             "pattern": "${workspaceFolder}/build/bin/lab_test"
